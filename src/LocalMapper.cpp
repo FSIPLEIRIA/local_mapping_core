@@ -41,6 +41,7 @@ namespace t24e {
 
             auto setTfRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBCamera>>& cameras,
                     const std::string& cameraName, const Eigen::Affine3d& tf, std::mutex& camerasMutex) {
+                camerasMutex.lock();
                 if(cameras.contains(cameraName)) {
                     cameras[cameraName]->setTfToBase(tf);
                 } else {
@@ -48,6 +49,7 @@ namespace t24e {
                     newCamera->setTfToBase(tf);
                     cameras[cameraName] = newCamera;
                 }
+                camerasMutex.unlock();
             };
 
             std::thread setTfThread(setTfRoutine, std::ref(this->cameras), std::ref(cameraName), std::ref(tf),
