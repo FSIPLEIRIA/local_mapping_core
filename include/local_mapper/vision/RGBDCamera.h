@@ -14,7 +14,7 @@ namespace t24e::local_mapper::vision {
      *
      * Besides the functionality offered by the RGB camera class, it keeps the latest depth image.
      */
-    class RGBDCamera : RGBCamera {
+    class RGBDCamera : public RGBCamera {
 
         private:
             /*! \brief The latest depth image captured by the camera. */
