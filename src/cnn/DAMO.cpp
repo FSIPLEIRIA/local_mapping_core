@@ -7,6 +7,10 @@
 namespace t24e {
     namespace local_mapper {
         namespace cnn {
+            bounding_box_t DAMO::detectCones(cv::Mat img) {
+                // TODO
+                return {};
+            }
         } // t24e
     } // local_mapper
 } // cnn

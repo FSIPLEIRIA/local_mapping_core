@@ -5,12 +5,17 @@
 #ifndef LOCAL_MAPPING_CORE_CONEDETECTOR_H
 #define LOCAL_MAPPING_CORE_CONEDETECTOR_H
 
+#include <local_mapper/cnn/types.h>
+#include <opencv2/opencv.hpp>
+
 namespace t24e {
     namespace local_mapper {
         namespace cnn {
 
             class ConeDetector {
-                // TODO
+
+                public:
+                    virtual bounding_box_t detectCones(cv::Mat img) = 0;
             };
 
         } // t24e

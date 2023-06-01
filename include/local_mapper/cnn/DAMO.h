@@ -12,7 +12,9 @@ namespace t24e {
         namespace cnn {
 
             class DAMO : ConeDetector {
-                // TODO
+
+                public:
+                    bounding_box_t detectCones(cv::Mat img) override;
             };
 
         } // t24e
