@@ -8,6 +8,6 @@ find_package(Eigen3 REQUIRED)
 
 include_directories(include ${OpenCV_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
 
-add_library(local_mapping_core SHARED src/LocalMapper.cpp src/vision/RGBCamera.cpp)
+add_library(local_mapping_core SHARED src/LocalMapper.cpp src/vision/RGBCamera.cpp src/vision/RGBDCamera.cpp)
 
 target_link_libraries(local_mapping_core ${OpenCV_LIBS} ${Eigen3_LIBS})
