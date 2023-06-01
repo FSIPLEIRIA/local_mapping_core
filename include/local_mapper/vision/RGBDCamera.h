@@ -7,6 +7,8 @@
 
 #include <local_mapper/vision/RGBCamera.h>
 #include <local_mapper/vision/Utils.h>
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
 
 namespace t24e::local_mapper::vision {
 
@@ -22,6 +24,8 @@ namespace t24e::local_mapper::vision {
 
             /*! \brief Was a depth image set? */
             bool depthImageSet = false;
+
+            // TODO: detect cones and de-project automatically on new images
 
         public:
             StampedImage getLastDepthImage() const;

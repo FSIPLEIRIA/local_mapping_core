@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <thread>
 #include <mutex>
 
 namespace t24e::local_mapper {
@@ -21,6 +22,9 @@ namespace t24e::local_mapper {
         private:
             /*! \brief Map of camera's shared pointers indexed by a unique name. */
             std::unordered_map<std::string,std::shared_ptr<local_mapper::vision::RGBCamera>> cameras;
+
+            /*! \brief Mutex which controls access to the cameras map. */
+            std::mutex camerasMutex;
 
             /*! \brief Current map of cones. */
             pcl::PointCloud<pcl::PointXYZL> currentMap;

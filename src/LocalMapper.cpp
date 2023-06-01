@@ -19,13 +19,22 @@ namespace t24e {
 
         void LocalMapper::addColorImage(const std::string &cameraName, const cv::Mat &img) {
 
-            if(this->cameras.contains(cameraName)) {
-                this->cameras[cameraName]->captureColorImage(img);
-            } else {
-                std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
-                newCamera->captureColorImage(img);
-                this->cameras[cameraName] = newCamera;
-            }
+            auto addImageRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBCamera>>& cameras,
+                    const std::string& cameraName, const cv::Mat& img, std::mutex& camerasMutex) {
+                camerasMutex.lock();
+                if(cameras.contains(cameraName)) {
+                    cameras[cameraName]->captureColorImage(img);
+                } else {
+                    std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
+                    newCamera->captureColorImage(img);
+                    cameras[cameraName] = newCamera;
+                }
+                camerasMutex.unlock();
+            };
+
+            std::thread addImageThread(addImageRoutine, std::ref(this->cameras), std::ref(cameraName), std::ref(img),
+                                       std::ref(this->camerasMutex));
+            addImageThread.detach();
         }
 
         void LocalMapper::setCameraTf(const std::string &cameraName, const Eigen::Affine3d& tf) {
