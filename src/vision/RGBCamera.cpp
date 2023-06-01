@@ -20,6 +20,17 @@ namespace t24e::local_mapper::vision {
         return this->tfToBase;
     }
 
+    Eigen::Matrix<double,3,4> RGBCamera::getTfToBaseAsRt() const {
+        Eigen::Matrix3d rotation = this->tfToBase.rotation();
+        Eigen::Vector3d translation = this->tfToBase.translation();
+
+        Eigen::Matrix<double,3,4> m;
+        m.block<3,3>(0,0) = rotation;
+        m.block<3,1>(0,3) = translation;
+
+        return m;
+    }
+
     void RGBCamera::setTfToBase(const Eigen::Affine3d &tf) {
         this->tfToBaseSet = true;
         this->tfToBase = tf;
@@ -31,5 +42,17 @@ namespace t24e::local_mapper::vision {
 
     bool RGBCamera::isTfDefined() const {
         return this->tfToBaseSet;
+    }
+
+    Eigen::Matrix3d RGBCamera::getK() const {
+        return this->K;
+    }
+
+    void RGBCamera::setK(const Eigen::Matrix3d &k) {
+        this->K = k;
+    }
+
+    bool RGBCamera::isKSet() const {
+        return this->kSet;
     }
 } // vision
