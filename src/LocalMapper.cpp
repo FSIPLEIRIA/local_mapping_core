@@ -38,13 +38,21 @@ namespace t24e {
         }
 
         void LocalMapper::setCameraTf(const std::string &cameraName, const Eigen::Affine3d& tf) {
-            if(this->cameras.contains(cameraName)) {
-                this->cameras[cameraName]->setTfToBase(tf);
-            } else {
-                std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
-                newCamera->setTfToBase(tf);
-                this->cameras[cameraName] = newCamera;
-            }
+
+            auto setTfRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBCamera>>& cameras,
+                    const std::string& cameraName, const Eigen::Affine3d& tf, std::mutex& camerasMutex) {
+                if(cameras.contains(cameraName)) {
+                    cameras[cameraName]->setTfToBase(tf);
+                } else {
+                    std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
+                    newCamera->setTfToBase(tf);
+                    cameras[cameraName] = newCamera;
+                }
+            };
+
+            std::thread setTfThread(setTfRoutine, std::ref(this->cameras), std::ref(cameraName), std::ref(tf),
+                                    std::ref(this->camerasMutex));
+            setTfThread.detach();
         }
 
         pcl::PointCloud<pcl::PointXYZL> LocalMapper::getCurrentMap() const {
