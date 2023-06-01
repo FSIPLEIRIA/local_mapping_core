@@ -6,13 +6,13 @@
 
 namespace t24e::local_mapper::vision {
 
-    cv::Mat RGBDCamera::getLastDepthImage() const {
+    StampedImage RGBDCamera::getLastDepthImage() const {
         return this->lastDepthImage;
     }
 
     void RGBDCamera::captureDepthImage(const cv::Mat &img) {
         this->depthImageSet = true;
-        this->lastDepthImage = img;
+        this->lastDepthImage = local_mapper::vision::Utils::make_stamped_image(img);
     }
 
     bool RGBDCamera::hasDepthImage() const {

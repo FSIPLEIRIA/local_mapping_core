@@ -7,14 +7,21 @@
 
 #include <opencv2/opencv.hpp>
 #include <eigen3/Eigen/Dense>
+#include <utility>
+#include <chrono>
+#include <local_mapper/vision/types.h>
 
 namespace t24e::local_mapper::vision {
 
+    /*! \brief This class represents any RGB camera attached to the car.
+     *
+     * It keeps the latest color image and the transform between the camera and the car's base referential.
+     */
     class RGBCamera {
 
         protected:
             /*! \brief The last color image captured by this camera. */
-            cv::Mat lastColorImage;
+            StampedImage lastColorImage;
 
             /*! \brief Was a color image ever defined? */
             bool colorImageSet = false;
@@ -27,7 +34,7 @@ namespace t24e::local_mapper::vision {
 
         public:
             /*! \brief Get the last color image. */
-            cv::Mat getLastColorImage() const;
+            StampedImage getLastColorImage() const;
 
             /*! \brief Provide this class a new color image. */
             void captureColorImage(const cv::Mat& img);
