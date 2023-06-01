@@ -32,6 +32,12 @@ namespace t24e::local_mapper::vision {
             /*! \brief Was the transform to the base referential defined? */
             bool tfToBaseSet = false;
 
+            /*! \brief Camera's intrinsic matrix. */
+            Eigen::Matrix3d K;
+
+            /*! \brief Was the intrinsic matrix set? */
+            bool kSet = false;
+
         public:
             /*! \brief Get the last color image. */
             StampedImage getLastColorImage() const;
@@ -50,6 +56,15 @@ namespace t24e::local_mapper::vision {
 
             /*! \brief Check if the transform between the camera's optical axis and the car's axis was defined. */
             bool isTfDefined() const;
+
+            /*! \brief Get the defined intrinsic matrix. */
+            Eigen::Matrix3d getK() const;
+
+            /*! \brief Set the camera's intrinsic matrix. */
+            void setK(const Eigen::Matrix3d& k);
+
+            /*! \brief Is the intrinsic matrix set? */
+            bool isKSet() const;
 
     };
 

@@ -32,4 +32,16 @@ namespace t24e::local_mapper::vision {
     bool RGBCamera::isTfDefined() const {
         return this->tfToBaseSet;
     }
+
+    Eigen::Matrix3d RGBCamera::getK() const {
+        return this->K;
+    }
+
+    void RGBCamera::setK(const Eigen::Matrix3d &k) {
+        this->K = k;
+    }
+
+    bool RGBCamera::isKSet() const {
+        return this->kSet;
+    }
 } // vision
