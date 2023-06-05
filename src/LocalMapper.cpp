@@ -19,14 +19,34 @@ namespace t24e {
 
         void LocalMapper::addColorImage(const std::string &cameraName, const cv::Mat &img) {
 
-            auto addImageRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBCamera>>& cameras,
+            auto addImageRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBDCamera>>& cameras,
                     const std::string& cameraName, const cv::Mat& img, std::mutex& camerasMutex) {
                 camerasMutex.lock();
                 if(cameras.contains(cameraName)) {
                     cameras[cameraName]->captureColorImage(img);
                 } else {
-                    std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
+                    std::shared_ptr<vision::RGBDCamera> newCamera = std::make_shared<vision::RGBDCamera>();
                     newCamera->captureColorImage(img);
+                    cameras[cameraName] = newCamera;
+                }
+                camerasMutex.unlock();
+            };
+
+            std::thread addImageThread(addImageRoutine, std::ref(this->cameras), std::ref(cameraName), std::ref(img),
+                                       std::ref(this->camerasMutex));
+            addImageThread.detach();
+        }
+
+        void LocalMapper::addDepthImage(const std::string &cameraName, const cv::Mat &img) {
+
+            auto addImageRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBDCamera>>& cameras,
+                                      const std::string& cameraName, const cv::Mat& img, std::mutex& camerasMutex) {
+                camerasMutex.lock();
+                if(cameras.contains(cameraName)) {
+                    cameras[cameraName]->captureDepthImage(img);
+                } else {
+                    std::shared_ptr<vision::RGBDCamera> newCamera = std::make_shared<vision::RGBDCamera>();
+                    newCamera->captureDepthImage(img);
                     cameras[cameraName] = newCamera;
                 }
                 camerasMutex.unlock();
@@ -39,13 +59,13 @@ namespace t24e {
 
         void LocalMapper::setCameraTf(const std::string &cameraName, const Eigen::Affine3d& tf) {
 
-            auto setTfRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBCamera>>& cameras,
+            auto setTfRoutine = [](std::unordered_map<std::string,std::shared_ptr<vision::RGBDCamera>>& cameras,
                     const std::string& cameraName, const Eigen::Affine3d& tf, std::mutex& camerasMutex) {
                 camerasMutex.lock();
                 if(cameras.contains(cameraName)) {
                     cameras[cameraName]->setTfToBase(tf);
                 } else {
-                    std::shared_ptr<vision::RGBCamera> newCamera = std::make_shared<vision::RGBCamera>();
+                    std::shared_ptr<vision::RGBDCamera> newCamera = std::make_shared<vision::RGBDCamera>();
                     newCamera->setTfToBase(tf);
                     cameras[cameraName] = newCamera;
                 }
@@ -58,6 +78,7 @@ namespace t24e {
         }
 
         pcl::PointCloud<pcl::PointXYZL> LocalMapper::getCurrentMap() const {
+            // TODO: each time a depth image is received, build the map. ICP (or other technique) needed
             return this->currentMap;
         }
     } // t24e

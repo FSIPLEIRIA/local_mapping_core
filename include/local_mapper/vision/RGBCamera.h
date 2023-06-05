@@ -69,6 +69,8 @@ namespace t24e::local_mapper::vision {
             /*! \brief Is the intrinsic matrix set? */
             bool isKSet() const;
 
+            const std::string TYPE = "RGB";
+
     };
 
 } // vision

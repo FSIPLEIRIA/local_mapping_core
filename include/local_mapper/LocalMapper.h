@@ -6,6 +6,7 @@
 #define LOCAL_MAPPING_CORE_LOCALMAPPER_H
 
 #include <local_mapper/vision/RGBCamera.h>
+#include <local_mapper/vision/RGBDCamera.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <vector>
@@ -21,7 +22,7 @@ namespace t24e::local_mapper {
 
         private:
             /*! \brief Map of camera's shared pointers indexed by a unique name. */
-            std::unordered_map<std::string,std::shared_ptr<local_mapper::vision::RGBCamera>> cameras;
+            std::unordered_map<std::string,std::shared_ptr<local_mapper::vision::RGBDCamera>> cameras;
 
             /*! \brief Mutex which controls access to the cameras map. */
             std::mutex camerasMutex;
@@ -38,6 +39,9 @@ namespace t24e::local_mapper {
 
             /*! \brief Register a color image on a camera object. */
             void addColorImage(const std::string &cameraName, const cv::Mat &img);
+
+            /*! \brief Register a depth image on a camera object. */
+            void addDepthImage(const std::string &cameraName, const cv::Mat &img);
 
             /*! \brief Declare the transform between a camera and the car's base frame. */
             void setCameraTf(const std::string& cameraName, const Eigen::Affine3d& tf);

@@ -32,6 +32,8 @@ namespace t24e::local_mapper::vision {
             void captureDepthImage(const cv::Mat& img);
 
             bool hasDepthImage() const;
+
+            const std::string TYPE = "RGBD";
     };
 
 } // t24e
