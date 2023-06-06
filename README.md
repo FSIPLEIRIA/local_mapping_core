@@ -15,3 +15,4 @@ from color, to make it work only on color images.
 - Eigen 3
 - OpenCV
 - Point Cloud Library (PCL)
+- [lart_common](https://github.com/FSIPLEIRIA/lart_common) - installation instructions on the repository
